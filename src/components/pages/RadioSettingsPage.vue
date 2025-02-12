@@ -121,7 +121,7 @@ export default {
 
             } catch(e) {
                 console.log(e);
-                // DialogUtils.showErrorAlert(e);
+                alert("Failed to save settings!");
             }
         },
     },
