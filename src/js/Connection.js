@@ -60,6 +60,10 @@ class Connection {
         GlobalState.contacts = await GlobalState.connection.getContacts();
     }
 
+    static async setAdvertName(name) {
+        await GlobalState.connection.sendCommandSetAdvertName(name);
+    }
+
     static async syncDeviceTime() {
         const timestamp = Math.floor(Date.now() / 1000);
         await GlobalState.connection.sendCommandSetDeviceTime(timestamp);
