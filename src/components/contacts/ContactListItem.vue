@@ -4,6 +4,7 @@
         <!-- name and info -->
         <div class="mr-auto">
             <div>{{ contact.advName }}</div>
+            <div class="text-sm text-gray-500">&lt;{{ formatBytesToHex(contact.publicKey.slice(0, 4)) }}...{{ formatBytesToHex(contact.publicKey.slice(-4)) }}&gt;</div>
             <div class="flex space-x-1 text-sm text-gray-500">
 
                <span class="my-auto">
@@ -30,6 +31,11 @@
             </div>
         </div>
 
+        <!-- node dropdown menu -->
+        <div class="my-auto">
+            <ContactDropDownMenu :contact="contact"/>
+        </div>
+
     </div>
 </template>
 
@@ -37,10 +43,12 @@
 import GlobalState from "../../js/GlobalState.js";
 import IconButton from "../IconButton.vue";
 import TimeUtils from "../../js/TimeUtils.js";
+import ContactDropDownMenu from "./ContactDropDownMenu.vue";
 
 export default {
     name: 'ContactListItem',
     components: {
+        ContactDropDownMenu,
         IconButton,
     },
     props: {
@@ -49,6 +57,9 @@ export default {
     methods: {
         formatUnixSecondsAgo(unixSeconds) {
             return TimeUtils.formatUnixSecondsAgo(unixSeconds);
+        },
+        formatBytesToHex(uint8Array) {
+            return Array.from(uint8Array).map(byte => byte.toString(16).padStart(2, '0')).join('');
         },
     },
     computed: {
