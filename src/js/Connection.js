@@ -43,6 +43,7 @@ class Connection {
         });
 
         await this.loadSelfInfo();
+        await this.syncDeviceTime();
         await this.loadContacts();
 
     }
@@ -57,6 +58,11 @@ class Connection {
 
     static async loadContacts() {
         GlobalState.contacts = await GlobalState.connection.getContacts();
+    }
+
+    static async syncDeviceTime() {
+        const timestamp = Math.floor(Date.now() / 1000);
+        await GlobalState.connection.sendCommandSetDeviceTime(timestamp);
     }
 
 }
