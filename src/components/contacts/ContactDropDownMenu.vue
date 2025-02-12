@@ -14,6 +14,14 @@
                 <div class="text-sm text-gray-500 font-semibold">{{ contact.advName }}</div>
             </div>
 
+            <!-- reset path button -->
+            <DropDownMenuItem @click="onResetPath(contact)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span>Reset Path</span>
+            </DropDownMenuItem>
+
             <!-- delete contact button -->
             <DropDownMenuItem @click="onDeleteContact(contact)">
                 <svg class="size-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
@@ -46,6 +54,13 @@ export default {
         "contact-deleted",
     ],
     methods: {
+        async onResetPath(contact) {
+
+            // reset path
+            await Connection.resetContactPath(contact.publicKey);
+            await Connection.loadContacts();
+
+        },
         async onDeleteContact(contact) {
 
             // confirm user wants to remove this contact

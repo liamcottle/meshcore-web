@@ -65,6 +65,10 @@ class Connection {
         await GlobalState.connection.sendCommandSetDeviceTime(timestamp);
     }
 
+    static async resetContactPath(publicKey) {
+        await GlobalState.connection.sendCommandResetPath(publicKey);
+    }
+
     static async removeContact(publicKey) {
         await GlobalState.connection.sendCommandRemoveContact(publicKey);
     }
