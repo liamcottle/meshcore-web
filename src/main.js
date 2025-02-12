@@ -18,6 +18,11 @@ const router = createRouter({
             path: '/connect',
             component: () => import("./components/pages/ConnectPage.vue"),
         },
+        {
+            name: "settings.radio",
+            path: '/settings/radio',
+            component: () => import("./components/pages/RadioSettingsPage.vue"),
+        },
     ],
 });
 

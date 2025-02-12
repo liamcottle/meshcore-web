@@ -64,6 +64,11 @@ class Connection {
         await GlobalState.connection.sendCommandSetAdvertName(name);
     }
 
+    static async setRadioParams(radioFreq, radioBw, radioSf, radioCr, txPower) {
+        await GlobalState.connection.sendCommandSetTxPower(txPower);
+        await GlobalState.connection.sendCommandSetRadioParams(radioFreq, radioBw, radioSf, radioCr);
+    }
+
     static async syncDeviceTime() {
         const timestamp = Math.floor(Date.now() / 1000);
         await GlobalState.connection.sendCommandSetDeviceTime(timestamp);
