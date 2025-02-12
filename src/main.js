@@ -19,6 +19,12 @@ const router = createRouter({
             component: () => import("./components/pages/ConnectPage.vue"),
         },
         {
+            name: "contact.messages",
+            path: '/contacts/:publicKey/messages',
+            props: true,
+            component: () => import("./components/pages/ContactMessagesPage.vue"),
+        },
+        {
             name: "settings.radio",
             path: '/settings/radio',
             component: () => import("./components/pages/RadioSettingsPage.vue"),

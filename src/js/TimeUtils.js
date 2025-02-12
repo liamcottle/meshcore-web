@@ -13,6 +13,24 @@ class TimeUtils {
 
     }
 
+    static formatMessageTimestamp(unixMilliseconds) {
+
+        // convert millis to moment date
+        const date = moment.unix(unixMilliseconds / 1000);
+
+        // check if message date is same as today
+        const isSameDate = date.isSame(moment(), 'day');
+
+        // short format for messages from today
+        if(isSameDate){
+            return date.format("hh:mm A");
+        }
+
+        // long format for all other messages
+        return date.format("DD/MM/YYYY hh:mm A");
+
+    }
+
     static getTimeAgoShortHand(date) {
 
         // get duration between now and provided date

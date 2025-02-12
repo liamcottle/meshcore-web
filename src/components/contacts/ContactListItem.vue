@@ -31,7 +31,15 @@
             </div>
         </div>
 
-        <!-- node dropdown menu -->
+        <!-- unread messages count -->
+        <div v-if="unreadMessagesCount > 0" class="my-auto">
+            <div class="inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 rounded-full shadow">
+                <span v-if="unreadMessagesCount >= 100">99</span>
+                <span>{{ unreadMessagesCount }}</span>
+            </div>
+        </div>
+
+        <!-- contact dropdown menu -->
         <div class="my-auto">
             <ContactDropDownMenu :contact="contact"/>
         </div>
@@ -44,6 +52,7 @@ import GlobalState from "../../js/GlobalState.js";
 import IconButton from "../IconButton.vue";
 import TimeUtils from "../../js/TimeUtils.js";
 import ContactDropDownMenu from "./ContactDropDownMenu.vue";
+import Database from "../../js/Database.js";
 
 export default {
     name: 'ContactListItem',
@@ -54,7 +63,42 @@ export default {
     props: {
         contact: Object,
     },
+    data() {
+        return {
+            unreadMessagesCount: 0,
+            contactMessagesSubscription: null,
+            contactMessagesReadStateSubscription: null,
+        };
+    },
+    mounted() {
+
+        // listen for new messages so we can update read state
+        this.contactMessagesSubscription = Database.Message.getAllMessages().$.subscribe(async () => {
+            await this.onMessagesUpdated();
+        });
+
+        // listen for read state changes
+        this.contactMessagesReadStateSubscription = Database.ContactMessagesReadState.get(this.contact.publicKey).$.subscribe(async (contactMessagesReadState) => {
+            await this.onContactMessagesReadStateChange(contactMessagesReadState);
+        });
+
+    },
+    unmounted() {
+        this.contactMessagesSubscription?.unsubscribe();
+        this.contactMessagesReadStateSubscription?.unsubscribe();
+    },
     methods: {
+        async onMessagesUpdated() {
+            const contactMessagesReadState = await Database.ContactMessagesReadState.get(this.contact.publicKey).exec();
+            await this.onContactMessagesReadStateChange(contactMessagesReadState);
+        },
+        async updateUnreadMessagesCount(lastReadTimestamp) {
+            this.unreadMessagesCount = await Database.Message.getContactMessagesUnreadCount(this.contact.publicKey, lastReadTimestamp).exec();
+        },
+        async onContactMessagesReadStateChange(contactMessagesReadState) {
+            const messagesLastReadTimestamp = contactMessagesReadState?.timestamp ?? 0;
+            await this.updateUnreadMessagesCount(messagesLastReadTimestamp);
+        },
         formatUnixSecondsAgo(unixSeconds) {
             return TimeUtils.formatUnixSecondsAgo(unixSeconds);
         },
