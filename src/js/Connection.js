@@ -73,6 +73,11 @@ class Connection {
         await GlobalState.connection.sendCommandRemoveContact(publicKey);
     }
 
+    static async sendMessage(publicKey, message) {
+        await GlobalState.connection.sendTextMessage(publicKey, message);
+        // todo handle acks
+    }
+
 }
 
 export default Connection;

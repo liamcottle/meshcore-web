@@ -23,6 +23,7 @@ import Page from "./Page.vue";
 import GlobalState from "../../js/GlobalState.js";
 import ConnectButtons from "../connect/ConnectButtons.vue";
 import ContactsList from "../contacts/ContactsList.vue";
+import Connection from "../../js/Connection.js";
 
 export default {
     name: 'MainPage',
@@ -33,8 +34,17 @@ export default {
         Header,
     },
     methods: {
-        onContactClick(contact) {
-            // todo
+        async onContactClick(contact) {
+
+            // ask user for message
+            const message = prompt("Enter message to send");
+            if(!message){
+                return;
+            }
+
+            // send message
+            await Connection.sendMessage(contact.publicKey, message);
+
         },
     },
     computed: {
