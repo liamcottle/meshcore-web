@@ -4,7 +4,6 @@ A simple, mobile friendly, web based [MeshCore](https://github.com/ripplebiz/Mes
 
 ## TODO
 
-- handle message sending failure
 - auto retry sending failed messages up to x attempts
 - implement group chats
 
