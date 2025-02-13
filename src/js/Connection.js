@@ -10,8 +10,19 @@ class Connection {
             await this.connect(await BleConnection.open());
             return true;
         } catch(e) {
+
             console.log(e);
+
+            // ignore device not selected error
+            if(e.name === "NotFoundError"){
+                return false;
+            }
+
+            // show error message
+            alert("failed to connect to ble device!");
+
             return false;
+
         }
     }
 
@@ -20,8 +31,19 @@ class Connection {
             await this.connect(await SerialConnection.open());
             return true;
         } catch(e) {
+
             console.log(e);
+
+            // ignore device not selected error
+            if(e.name === "NotFoundError"){
+                return false;
+            }
+
+            // show error message
+            alert("failed to connect to serial device!");
+
             return false;
+
         }
     }
 
