@@ -10,8 +10,7 @@ self.addEventListener('notificationclick', function(event) {
     event.notification.close();
 
     // open pwa
-    const url = "/";
-    event.waitUntil(findClientForUrl(url).then((client) => {
+    event.waitUntil(findClient().then((client) => {
 
         // if an existing client exists, focus it
         if(client){
@@ -20,20 +19,18 @@ self.addEventListener('notificationclick', function(event) {
         }
 
         // otherwise open a new window
-        return self.clients.openWindow(url);
+        return self.clients.openWindow("/");
 
     }));
 
 });
 
-const findClientForUrl = function(urlToOpen) {
+// find any running client
+const findClient = function() {
     return self.clients.matchAll({
         type: "window",
         includeUncontrolled: true,
-    }).then(function (clientList) {
-        return clientList.find(function(client) {
-            const [ clientUrlWithoutFragment ] = client.url.split("#");
-            return clientUrlWithoutFragment.endsWith(urlToOpen);
-        });
+    }).then(function(clients) {
+        return clients[0];
     });
 };
