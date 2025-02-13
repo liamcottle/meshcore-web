@@ -2,6 +2,7 @@ import GlobalState from "./GlobalState.js";
 import {BleConnection, Constants, SerialConnection} from "@liamcottle/meshcore.js";
 import Database from "./Database.js";
 import Utils from "./Utils.js";
+import NotificationUtils from "./NotificationUtils.js";
 
 class Connection {
 
@@ -232,6 +233,7 @@ class Connection {
             return;
         }
 
+        // save message to database
         await Database.Message.insert({
             status: "received",
             to: GlobalState.selfInfo.publicKey,
@@ -244,6 +246,9 @@ class Connection {
             expected_ack_crc: null,
             error: null,
         });
+
+        // show notification
+        await NotificationUtils.showNotification(contact.advName, message.text);
 
     }
 
