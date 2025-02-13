@@ -8,11 +8,15 @@ class NotificationUtils {
             return;
         }
 
-        // show notification
-        new window.Notification(title, {
-            body: body,
-            icon: "/icon.png",
-        });
+        // show notification via service worker
+        if(navigator.serviceWorker){
+            navigator.serviceWorker.ready.then(function(registration) {
+                registration.showNotification(title, {
+                    body: body,
+                    icon: "/icon.png",
+                });
+            });
+        }
 
     }
 
