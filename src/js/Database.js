@@ -58,6 +58,9 @@ async function initDatabase(publicKeyHex) {
                     expected_ack_crc: {
                         type: 'integer',
                     },
+                    send_type: {
+                        type: 'integer',
+                    },
                     error: {
                         type: 'string',
                     },
@@ -99,6 +102,7 @@ class Message {
             text: data.text,
             timestamp: Date.now(),
             expected_ack_crc: data.expected_ack_crc,
+            send_type: data.send_type,
             error: null,
         });
     }

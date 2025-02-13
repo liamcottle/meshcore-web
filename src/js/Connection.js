@@ -144,6 +144,7 @@ class Connection {
             text: text,
             timestamp: Date.now(),
             expected_ack_crc: message.expectedAckCrc,
+            send_type: message.result,
             error: null,
         });
 
