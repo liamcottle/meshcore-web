@@ -4,7 +4,7 @@
         <!-- app bar -->
         <AppBar title="Radio Settings" :subtitle="GlobalState.selfInfo?.name">
             <template v-slot:trailing>
-                <SaveButton @click="save"/>
+                <SaveButton @click="save" :is-saving="isSaving"/>
             </template>
         </AppBar>
 
@@ -66,6 +66,7 @@ export default {
     components: {Page, SaveButton, AppBar},
     data() {
         return {
+            isSaving: false,
             name: null,
             radioFreq: null,
             radioBw: null,
@@ -88,6 +89,10 @@ export default {
             this.txPower = GlobalState.selfInfo?.txPower;
         },
         async save() {
+
+            // show loading
+            this.isSaving = true;
+
             try {
 
                 // ensure name provided
@@ -128,7 +133,8 @@ export default {
 
                 // save settings
                 await Connection.setAdvertName(this.name);
-                await Connection.setRadioParams(this.radioFreq, this.radioBw, this.radioSf, this.radioCr, this.txPower);
+                await Connection.setTxPower(this.txPower);
+                await Connection.setRadioParams(this.radioFreq, this.radioBw, this.radioSf, this.radioCr);
 
                 // reload self info
                 await Connection.loadSelfInfo();
@@ -145,6 +151,10 @@ export default {
                 console.log(e);
                 alert("Failed to save settings!");
             }
+
+            // show loading
+            this.isSaving = false;
+
         },
     },
     computed: {

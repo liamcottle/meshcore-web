@@ -150,12 +150,15 @@ class Connection {
     }
 
     static async setAdvertName(name) {
-        await GlobalState.connection.sendCommandSetAdvertName(name);
+        await GlobalState.connection.setAdvertName(name);
     }
 
-    static async setRadioParams(radioFreq, radioBw, radioSf, radioCr, txPower) {
-        await GlobalState.connection.sendCommandSetTxPower(txPower);
-        await GlobalState.connection.sendCommandSetRadioParams(radioFreq, radioBw, radioSf, radioCr);
+    static async setTxPower(txPower) {
+        await GlobalState.connection.setTxPower(txPower);
+    }
+
+    static async setRadioParams(radioFreq, radioBw, radioSf, radioCr) {
+        await GlobalState.connection.setRadioParams(radioFreq, radioBw, radioSf, radioCr);
     }
 
     static async syncDeviceTime() {
