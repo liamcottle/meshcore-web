@@ -11,7 +11,18 @@
 
             <!-- contact details -->
             <div class="p-2 border-b">
-                <div class="text-sm text-gray-500 font-semibold">{{ contact.advName }}</div>
+                <div class="text-sm text-gray-500 font-semibold">
+                    <span>{{ contact.advName }}</span>
+                </div>
+                <div class="text-sm text-gray-500">
+                    <!-- hops away -->
+                    <span class="flex my-auto text-sm text-gray-500">
+                        <span v-if="contact.outPathLen === -1">No Path (Flood)</span>
+                        <span v-else-if="contact.outPathLen === 0">Direct</span>
+                        <span v-else-if="contact.outPathLen === 1">1 Hop</span>
+                        <span v-else>• {{ contact.outPathLen }} Hops</span>
+                    </span>
+                </div>
             </div>
 
             <!-- reset path button -->
