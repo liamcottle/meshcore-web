@@ -16,6 +16,11 @@
                 <div class="bg-white divide-y">
 
                     <div class="w-full p-2">
+                        <div class="block mb-2 text-sm font-medium text-gray-900">Name</div>
+                        <input v-model="name" type="text" placeholder="e.g: Anonymous" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    </div>
+
+                    <div class="w-full p-2">
                         <div class="block mb-2 text-sm font-medium text-gray-900">Frequency (kHz)</div>
                         <input v-model="radioFreq" type="number" placeholder="e.g: 917375" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
@@ -61,6 +66,7 @@ export default {
     components: {Page, SaveButton, AppBar},
     data() {
         return {
+            name: null,
             radioFreq: null,
             radioBw: null,
             radioSf: null,
@@ -74,6 +80,7 @@ export default {
     methods: {
         async load() {
             await Connection.loadSelfInfo();
+            this.name = GlobalState.selfInfo?.name;
             this.radioFreq = GlobalState.selfInfo?.radioFreq;
             this.radioBw = GlobalState.selfInfo?.radioBw;
             this.radioSf = GlobalState.selfInfo?.radioSf;
@@ -82,6 +89,12 @@ export default {
         },
         async save() {
             try {
+
+                // ensure name provided
+                if(!this.name || this.name.length === 0){
+                    alert("Name is required!");
+                    return;
+                }
 
                 // ensure frequency provided
                 if(!this.radioFreq){
@@ -114,10 +127,19 @@ export default {
                 }
 
                 // save settings
+                await Connection.setAdvertName(this.name);
                 await Connection.setRadioParams(this.radioFreq, this.radioBw, this.radioSf, this.radioCr, this.txPower);
+
+                // reload self info
+                await Connection.loadSelfInfo();
 
                 // show success alert
                 alert("Settings saved.");
+
+                // go back to main page
+                this.$router.push({
+                    name: "main",
+                });
 
             } catch(e) {
                 console.log(e);
