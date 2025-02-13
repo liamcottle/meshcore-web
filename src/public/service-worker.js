@@ -9,4 +9,7 @@ self.addEventListener('notificationclick', function(event) {
     // dismiss it
     event.notification.close();
 
+    // open pwa
+    event.waitUntil(self.clients.openWindow("/"));
+
 });
