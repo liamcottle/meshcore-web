@@ -107,6 +107,21 @@ class Message {
         });
     }
 
+    static async getMessageById(id) {
+        return await database.messages.findOne({
+            selector: {
+                id: {
+                    $eq: id,
+                },
+            },
+            sort: [
+                {
+                    timestamp: "desc",
+                },
+            ],
+        }).exec();
+    }
+
     // mark a message as delivered by its ack code
     static async setMessageDeliveredByAckCode(ackCode) {
 
@@ -133,30 +148,19 @@ class Message {
     }
 
     // mark a message as failed by its ack code
-    static async setMessageFailedByAckCode(ackCode, reason) {
+    static async setMessageFailedById(id, reason) {
 
         // find one latest message by ack code
         // this will prevent updating older messages that might have the same ack code
-        const message = await database.messages.findOne({
-            selector: {
-                expected_ack_crc: {
-                    $eq: ackCode,
-                },
-            },
-            sort: [
-                {
-                    timestamp: "desc",
-                },
-            ],
-        }).exec();
+        const message = await this.getMessageById(id);
 
         // do nothing if message not found
         if(!message){
             return;
         }
 
-        // do nothing if already delivered
-        if(message.status === "delivered"){
+        // only update if still in sending state
+        if(message.status !== "sending"){
             return;
         }
 

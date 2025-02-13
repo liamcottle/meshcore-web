@@ -75,7 +75,6 @@
 
             <!-- text input -->
             <textarea
-                :readonly="isSendingMessage"
                 v-model="newMessageText"
                 @keydown.enter.exact.native="onEnterPressed"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -101,6 +100,7 @@ import Connection from "../../js/Connection.js";
 import MessageUtils from "../../js/MessageUtils.js";
 import DeviceUtils from "../../js/DeviceUtils.js";
 import TimeUtils from "../../js/TimeUtils.js";
+import Utils from "../../js/Utils.js";
 
 export default {
     name: 'MessageViewer',
@@ -140,6 +140,11 @@ export default {
                 return false;
             }
 
+            // can't send if already sending
+            if(this.isSendingMessage){
+                return;
+            }
+
             // do nothing if message is empty
             const newMessageText = this.newMessageText;
             if(newMessageText == null || newMessageText === ""){
@@ -147,7 +152,6 @@ export default {
             }
 
             // todo validate message max length
-            // todo rate limit to 1 message per second, otherwise duplicate messages in same second have same packet hash and won't send/ack
 
             // show loading
             this.isSendingMessage = true;
@@ -164,6 +168,9 @@ export default {
                 console.log(e);
                 alert("failed to send message");
             }
+
+            // force user to wait 1 second before sending another message
+            await Utils.sleep(1000);
 
             // hide loading
             this.isSendingMessage = false;
