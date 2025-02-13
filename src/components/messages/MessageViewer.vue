@@ -24,12 +24,12 @@
 
                         <!-- inbound timestamp -->
                         <div v-if="isMessageInbound(message)" class="text-xs text-gray-500">
-                            <span>{{ formatMessageTimestamp(message.timestamp) }}</span>
+                            <span @click="showReceivedMessageInfo(message)" class="cursor-pointer">{{ formatMessageTimestamp(message.timestamp) }}</span>
                         </div>
 
                         <!-- outbound timestamp -->
                         <div v-if="isMessageOutbound(message) && type === 'channel'" class="ml-auto text-xs text-gray-500">
-                            <span>{{ formatMessageTimestamp(message.timestamp) }}</span>
+                            <span @click="showDeliveredMessageInfo(message)" class="cursor-pointer">{{ formatMessageTimestamp(message.timestamp) }}</span>
                         </div>
 
                         <!-- message state -->
@@ -281,6 +281,20 @@ export default {
             if(message.rtt){
                 info.push(`RTT: ${message.rtt}ms`);
             }
+
+            // show info
+            alert(info.join("\n"));
+
+        },
+        showReceivedMessageInfo: function(message) {
+
+            // basic info
+            const info = [
+                `Sent: ${TimeUtils.millisecondsToDateTimeString(message.sender_timestamp)}`,
+                `Received: ${TimeUtils.millisecondsToDateTimeString(message.timestamp)}`,
+            ];
+
+            // todo show hops
 
             // show info
             alert(info.join("\n"));
