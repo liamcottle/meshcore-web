@@ -49,7 +49,7 @@ export default {
             }
 
             // user clicked an unsupported contact type
-            alert("Unsupported contact type");
+            alert("Messaging this contact type is not supported.");
 
         },
     },
