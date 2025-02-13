@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { Constants } from "@liamcottle/meshcore.js";
 import Header from "../Header.vue";
 import Page from "./Page.vue";
 import GlobalState from "../../js/GlobalState.js";
@@ -35,12 +36,21 @@ export default {
     },
     methods: {
         async onContactClick(contact) {
-            this.$router.push({
-                name: "contact.messages",
-                params: {
-                    publicKey: Utils.bytesToHex(contact.publicKey),
-                },
-            });
+
+            // handle clicking a chat contact
+            if(contact.type === Constants.AdvType.Chat){
+                this.$router.push({
+                    name: "contact.messages",
+                    params: {
+                        publicKey: Utils.bytesToHex(contact.publicKey),
+                    },
+                });
+                return;
+            }
+
+            // user clicked an unsupported contact type
+            alert("Unsupported contact type");
+
         },
     },
     computed: {
