@@ -33,7 +33,10 @@
 
                                 <!-- state label -->
                                 <div class="my-auto">
-                                    <span v-if="isMessageFailed(message)">Failed: {{ message.error }}</span>
+                                    <span v-if="isMessageFailed(message)" class="flex space-x-1">
+                                        <span>Failed: {{ message.error }}</span>
+                                        <span @click="retrySendingMessage(message)" class="text-blue-500 underline cursor-pointer">Retry?</span>
+                                    </span>
                                     <span v-else-if="isMessageDelivered(message)">Delivered</span>
                                     <span v-else>Sending</span>
                                 </div>
@@ -132,7 +135,7 @@ export default {
         this.messagesSubscription?.unsubscribe();
     },
     methods: {
-        async sendMessage() {
+        async sendMessage(text) {
 
             // can't send if not connected
             if(!GlobalState.connection){
@@ -146,7 +149,7 @@ export default {
             }
 
             // do nothing if message is empty
-            const newMessageText = this.newMessageText;
+            const newMessageText = text ?? this.newMessageText;
             if(newMessageText == null || newMessageText === ""){
                 return;
             }
@@ -174,6 +177,20 @@ export default {
 
             // hide loading
             this.isSendingMessage = false;
+
+        },
+        async retrySendingMessage(message) {
+
+            // do nothing if already sending message
+            if(this.isSendingMessage){
+                return;
+            }
+
+            // delete original message
+            await Database.Message.deleteMessageById(message.id);
+
+            // resend message
+            await this.sendMessage(message.text);
 
         },
         isMessageInbound: (message) => MessageUtils.isMessageInbound(message),

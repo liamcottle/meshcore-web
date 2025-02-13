@@ -114,12 +114,17 @@ class Message {
                     $eq: id,
                 },
             },
-            sort: [
-                {
-                    timestamp: "desc",
-                },
-            ],
         }).exec();
+    }
+
+    static async deleteMessageById(id) {
+        return await database.messages.findOne({
+            selector: {
+                id: {
+                    $eq: id,
+                },
+            },
+        }).incrementalRemove();
     }
 
     // mark a message as delivered by its ack code
