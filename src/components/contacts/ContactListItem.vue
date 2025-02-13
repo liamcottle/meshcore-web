@@ -1,6 +1,9 @@
 <template>
     <div class="flex cursor-pointer p-2 bg-white hover:bg-gray-50">
 
+        <!-- icon -->
+        <ContactIcon :contact="contact" class="my-auto mr-2"/>
+
         <!-- name and info -->
         <div class="mr-auto">
             <div>{{ contact.advName }}</div>
@@ -53,10 +56,12 @@ import IconButton from "../IconButton.vue";
 import TimeUtils from "../../js/TimeUtils.js";
 import ContactDropDownMenu from "./ContactDropDownMenu.vue";
 import Database from "../../js/Database.js";
+import ContactIcon from "./ContactIcon.vue";
 
 export default {
     name: 'ContactListItem',
     components: {
+        ContactIcon,
         ContactDropDownMenu,
         IconButton,
     },

@@ -30,6 +30,14 @@
                             <input type="radio" :checked="filter === 'all'"/>
                             <div class="my-auto" :class="[ filter === 'all' ? 'font-bold' : '' ]">All</div>
                         </DropDownMenuItem>
+                        <DropDownMenuItem @click="filter = 'chat'">
+                            <input type="radio" :checked="filter === 'chat'"/>
+                            <div class="my-auto" :class="[ filter === 'chat' ? 'font-bold' : '' ]">Users</div>
+                        </DropDownMenuItem>
+                        <DropDownMenuItem @click="filter = 'repeater'">
+                            <input type="radio" :checked="filter === 'repeater'"/>
+                            <div class="my-auto" :class="[ filter === 'repeater' ? 'font-bold' : '' ]">Repeaters</div>
+                        </DropDownMenuItem>
                     </template>
                 </DropDownMenu>
             </div>
@@ -44,6 +52,7 @@
 </template>
 
 <script>
+import { Constants } from "@liamcottle/meshcore.js";
 import GlobalState from "../../js/GlobalState.js";
 import IconButton from "../IconButton.vue";
 import DropDownMenu from "../DropDownMenu.vue";
@@ -111,7 +120,19 @@ export default {
         },
         getFilteredContacts(contacts) {
 
-            // todo filter by chat, repeater, room etc
+            // filter by chat only
+            if(this.filter === "chat"){
+                return contacts.filter((contact) => {
+                    return contact.type === Constants.AdvType.Chat;
+                });
+            }
+
+            // filter by repeater only
+            if(this.filter === "repeater"){
+                return contacts.filter((contact) => {
+                    return contact.type === Constants.AdvType.Repeater;
+                });
+            }
 
             // fallback to returning all contacts
             return contacts;
