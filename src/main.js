@@ -31,7 +31,6 @@ const routes = [
         path: '/contacts/:publicKey/messages',
         props: true,
         component: () => import("./components/pages/ContactMessagesPage.vue"),
-        beforeEnter: handleRouteThatRequiresDeviceConnection,
     },
     {
         name: "settings.radio",
