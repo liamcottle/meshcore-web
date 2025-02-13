@@ -248,7 +248,7 @@ class Connection {
         });
 
         // show notification
-        await NotificationUtils.showNotification(contact.advName, message.text);
+        await NotificationUtils.showNewMessageNotification(contact, message.text);
 
     }
 
