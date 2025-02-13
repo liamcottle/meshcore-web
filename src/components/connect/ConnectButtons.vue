@@ -56,16 +56,18 @@ export default {
     name: 'ConnectButtons',
     methods: {
         async connectViaBluetooth() {
-            await Connection.connectViaBluetooth();
-            this.$router.push({
-                name: "main",
-            });
+            if(await Connection.connectViaBluetooth()){
+                this.$router.push({
+                    name: "main",
+                });
+            }
         },
         async connectViaSerial() {
-            await Connection.connectViaSerial();
-            this.$router.push({
-                name: "main",
-            });
+            if(await Connection.connectViaSerial()){
+                this.$router.push({
+                    name: "main",
+                });
+            }
         },
     },
 }
