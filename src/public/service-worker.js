@@ -26,13 +26,14 @@ self.addEventListener('notificationclick', function(event) {
 
 });
 
-const findClientForUrl = function(url) {
+const findClientForUrl = function(urlToOpen) {
     return self.clients.matchAll({
         type: "window",
         includeUncontrolled: true,
     }).then(function (clientList) {
         return clientList.find(function(client) {
-            return client.url.endsWith(url);
+            const [ clientUrlWithoutFragment ] = client.url.split("#");
+            return clientUrlWithoutFragment.endsWith(urlToOpen);
         });
     });
 };
