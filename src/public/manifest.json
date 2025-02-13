@@ -1,0 +1,17 @@
+{
+  "name": "MeshCore",
+  "short_name": "MeshCore",
+  "description": "A simple, mobile friendly, web based MeshCore client.",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "display": "standalone",
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF"
+}

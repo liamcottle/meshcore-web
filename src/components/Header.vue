@@ -1,5 +1,8 @@
 <template>
     <div class="flex bg-white p-2 border-b h-16">
+        <div class="my-auto mr-2">
+            <img src="/icon.png" class="size-12 rounded"/>
+        </div>
         <div class="my-auto mr-auto overflow-hidden">
             <div class="font-bold">MeshCore Client</div>
             <div class="text-sm truncate">
