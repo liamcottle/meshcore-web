@@ -14,7 +14,7 @@
 
         <!-- list -->
         <div class="flex h-full w-full overflow-hidden">
-            <MessageViewer v-if="contact != null" :contact="contact"/>
+            <MessageViewer v-if="contact != null" :type="'contact'" :contact="contact"/>
         </div>
 
     </Page>

@@ -33,6 +33,12 @@ const routes = [
         component: () => import("./components/pages/ContactMessagesPage.vue"),
     },
     {
+        name: "channel.messages",
+        path: '/channels/:channelIdx/messages',
+        props: true,
+        component: () => import("./components/pages/ChannelMessagesPage.vue"),
+    },
+    {
         name: "settings.radio",
         path: '/settings/radio',
         component: () => import("./components/pages/RadioSettingsPage.vue"),

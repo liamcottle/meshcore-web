@@ -198,6 +198,23 @@ class Connection {
 
     }
 
+    static async sendChannelMessage(channelIdx, text) {
+
+        // send message
+        await GlobalState.connection.sendChannelTextMessage(channelIdx, text);
+
+        // save to database
+        await Database.ChannelMessage.insert({
+            channel_idx: channelIdx,
+            from: GlobalState.selfInfo.publicKey,
+            path_len: null,
+            txt_type: Constants.TxtTypes.Plain,
+            sender_timestamp: Date.now(),
+            text: text,
+        });
+
+    }
+
     static async syncMessages() {
         while(true){
 
@@ -208,14 +225,18 @@ class Connection {
             }
 
             // handle received message
-            await this.onMessageReceived(message);
+            if(message.contactMessage){
+                await this.onContactMessageReceived(message.contactMessage);
+            } else if(message.channelMessage) {
+                await this.onChannelMessageReceived(message.channelMessage);
+            }
 
         }
     }
 
-    static async onMessageReceived(message) {
+    static async onContactMessageReceived(message) {
 
-        console.log("onMessageReceived", message);
+        console.log("onContactMessageReceived", message);
 
         // find first contact that matches this public key prefix
         // todo, maybe use the most recently updated contact in case of collision? ideally we should be given the full hash by firmware anyway...
@@ -242,13 +263,28 @@ class Connection {
             txt_type: message.txtType,
             sender_timestamp: message.senderTimestamp,
             text: message.text,
-            timestamp: Date.now(),
             expected_ack_crc: null,
             error: null,
         });
 
         // show notification
         await NotificationUtils.showNewMessageNotification(contact, message.text);
+
+    }
+
+    static async onChannelMessageReceived(message) {
+
+        console.log("onChannelMessageReceived", message);
+
+        // save message to database
+        await Database.ChannelMessage.insert({
+            channel_idx: message.channelIdx,
+            from: null,
+            path_len: message.pathLen,
+            txt_type: message.txtType,
+            sender_timestamp: message.senderTimestamp,
+            text: message.text,
+        });
 
     }
 

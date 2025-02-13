@@ -22,13 +22,18 @@
                             </div>
                         </div>
 
-                        <!-- timestamp -->
+                        <!-- inbound timestamp -->
                         <div v-if="isMessageInbound(message)" class="text-xs text-gray-500">
                             <span>{{ formatMessageTimestamp(message.timestamp) }}</span>
                         </div>
 
+                        <!-- outbound timestamp -->
+                        <div v-if="isMessageOutbound(message) && type === 'channel'" class="ml-auto text-xs text-gray-500">
+                            <span>{{ formatMessageTimestamp(message.timestamp) }}</span>
+                        </div>
+
                         <!-- message state -->
-                        <div v-if="isMessageOutbound(message)" class="flex text-right" :class="[ isMessageFailed(message) ? 'text-red-500' : 'text-gray-500' ]">
+                        <div v-if="isMessageOutbound(message) && type === 'contact'" class="flex text-right" :class="[ isMessageFailed(message) ? 'text-red-500' : 'text-gray-500' ]">
                             <div class="flex ml-auto space-x-1">
 
                                 <!-- state label -->
@@ -108,7 +113,9 @@ import Utils from "../../js/Utils.js";
 export default {
     name: 'MessageViewer',
     props: {
+        type: String,
         contact: Object,
+        channel: Object,
     },
     data() {
         return {
@@ -125,7 +132,11 @@ export default {
     mounted() {
 
         // init database subscription for messages
-        this.messagesSubscription = Database.Message.getContactMessages(this.contact.publicKey).$.subscribe(this.onMessagesUpdated);
+        if(this.type === "contact"){
+            this.messagesSubscription = Database.Message.getContactMessages(this.contact.publicKey).$.subscribe(this.onMessagesUpdated);
+        } else if(this.type === "channel") {
+            this.messagesSubscription = Database.ChannelMessage.getChannelMessages(this.channel.idx).$.subscribe(this.onMessagesUpdated);
+        }
 
         // update read state
         this.updateMessagesLastReadAt();
@@ -161,8 +172,11 @@ export default {
 
             try {
 
-                // send message
-                await Connection.sendMessage(this.contact.publicKey, newMessageText);
+                if(this.type === "contact"){
+                    await Connection.sendMessage(this.contact.publicKey, newMessageText);
+                } else if(this.type === "channel") {
+                    await Connection.sendChannelMessage(this.channel.idx, newMessageText);
+                }
 
                 // clear new message input
                 this.newMessageText = "";
@@ -248,7 +262,9 @@ export default {
         updateMessagesLastReadAt() {
 
             // update last read at for contact messages
-            Database.ContactMessagesReadState.touch(this.contact.publicKey);
+            if(this.type === "contact"){
+                Database.ContactMessagesReadState.touch(this.contact.publicKey);
+            }
 
         },
         formatMessageTimestamp(timestamp) {
@@ -259,7 +275,12 @@ export default {
         canSendMessage() {
 
             // can't send if contact is not selected
-            if(this.contact == null){
+            if(this.type === 'contact' && this.contact == null){
+                return false;
+            }
+
+            // can't send if channel is not selected
+            if(this.type === 'channel' && this.channel == null){
                 return false;
             }
 

@@ -5,6 +5,13 @@ const globalState = reactive({
     connection: null,
     selfInfo: null,
     contacts: [],
+    channels: [
+        {
+            idx: 0,
+            name: "Public Channel",
+            description: "This is the default public channel.",
+        },
+    ],
 });
 
 export default globalState;

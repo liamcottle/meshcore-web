@@ -83,6 +83,40 @@ async function initDatabase(publicKeyHex) {
                 },
             }
         },
+        channel_messages: {
+            schema: {
+                version: 0,
+                primaryKey: 'id',
+                type: 'object',
+                properties: {
+                    id: {
+                        type: 'string',
+                        maxLength: 36,
+                    },
+                    channel_idx: {
+                        type: 'integer',
+                    },
+                    from: {
+                        type: 'string',
+                    },
+                    path_len: {
+                        type: 'integer',
+                    },
+                    txt_type: {
+                        type: 'integer',
+                    },
+                    sender_timestamp: {
+                        type: 'integer',
+                    },
+                    text: {
+                        type: 'string',
+                    },
+                    timestamp: {
+                        type: 'integer',
+                    },
+                },
+            }
+        },
     });
 
 }
@@ -262,8 +296,48 @@ class ContactMessagesReadState {
 
 }
 
+class ChannelMessage {
+
+    // insert a channel message into the database
+    static async insert(data) {
+        return await database.channel_messages.insert({
+            id: v4(),
+            channel_idx: data.channel_idx,
+            from: data.from != null ? Utils.bytesToHex(data.from) : null,
+            path_len: data.path_len,
+            txt_type: data.txt_type,
+            sender_timestamp: data.sender_timestamp,
+            text: data.text,
+            timestamp: Date.now(),
+        });
+    }
+
+    // get channel messages for the provided channel idx
+    static getChannelMessages(channelIdx) {
+        return database.channel_messages.find({
+            selector: {
+                channel_idx: {
+                    $eq: channelIdx,
+                },
+            },
+            sort: [
+                {
+                    timestamp: "asc",
+                },
+            ],
+        });
+    }
+
+    // delete channel messages for the provided channel idx
+    static async deleteChannelMessages(channelIdx) {
+        await this.getChannelMessages(channelIdx).remove();
+    }
+
+}
+
 export default {
     initDatabase,
     Message,
     ContactMessagesReadState,
+    ChannelMessage,
 };
