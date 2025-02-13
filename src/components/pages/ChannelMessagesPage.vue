@@ -2,7 +2,13 @@
     <Page>
 
         <!-- app bar -->
-        <AppBar title="Channel Messages" :subtitle="subtitle"/>
+        <AppBar title="Channel Messages" :subtitle="subtitle">
+            <template v-slot:trailing>
+                <ChannelDropDownMenu
+                    v-if="channel"
+                    :channel="channel"/>
+            </template>
+        </AppBar>
 
         <!-- list -->
         <div class="flex h-full w-full overflow-hidden">
@@ -17,10 +23,12 @@ import Page from "./Page.vue";
 import AppBar from "../AppBar.vue";
 import MessageViewer from "../messages/MessageViewer.vue";
 import GlobalState from "../../js/GlobalState.js";
+import ChannelDropDownMenu from "../channels/ChannelDropDownMenu.vue";
 
 export default {
     name: 'ChannelMessagesPage',
     components: {
+        ChannelDropDownMenu,
         MessageViewer,
         AppBar,
         Page,

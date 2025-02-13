@@ -7,12 +7,21 @@
             <div class="text-sm text-gray-500">{{ channel.description }}</div>
         </div>
 
+        <!-- channel dropdown menu -->
+        <div class="my-auto">
+            <ChannelDropDownMenu :channel="channel"/>
+        </div>
+
     </div>
 </template>
 
 <script>
+import ContactDropDownMenu from "../contacts/ContactDropDownMenu.vue";
+import ChannelDropDownMenu from "./ChannelDropDownMenu.vue";
+
 export default {
     name: 'ChannelListItem',
+    components: {ChannelDropDownMenu, ContactDropDownMenu},
     props: {
         channel: Object,
     },
