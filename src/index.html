@@ -20,5 +20,11 @@
 <body>
 <div id="app" class="bg-gray-100"></div>
 <script type="module" src="main.js"></script>
+<script>
+    // install service worker to allow for pwa install
+    if('serviceWorker' in navigator){
+        navigator.serviceWorker.register('/service-worker.js');
+    }
+</script>
 </body>
 </html>
