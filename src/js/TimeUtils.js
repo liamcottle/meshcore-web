@@ -31,6 +31,11 @@ class TimeUtils {
 
     }
 
+    static secondsToDateTimeString(unixSeconds) {
+        const date = moment.unix(unixSeconds);
+        return date.format("DD/MMM/YYYY hh:mm A");
+    }
+
     static millisecondsToDateTimeString(unixMilliseconds) {
         const date = moment.unix(unixMilliseconds / 1000);
         return date.format("DD/MMM/YYYY hh:mm A");

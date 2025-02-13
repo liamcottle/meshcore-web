@@ -290,7 +290,7 @@ export default {
 
             // basic info
             const info = [
-                `Sent: ${TimeUtils.millisecondsToDateTimeString(message.sender_timestamp)}`,
+                `Sent: ${TimeUtils.secondsToDateTimeString(message.sender_timestamp)}`,
                 `Received: ${TimeUtils.millisecondsToDateTimeString(message.timestamp)}`,
             ];
 
