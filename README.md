@@ -4,7 +4,6 @@ A simple, mobile friendly, web based [MeshCore](https://github.com/ripplebiz/Mes
 
 ## TODO
 
-- implement group chats
 - add screenshots to readme
 
 ## License
