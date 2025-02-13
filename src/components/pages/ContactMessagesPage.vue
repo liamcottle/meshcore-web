@@ -2,7 +2,15 @@
     <Page>
 
         <!-- app bar -->
-        <AppBar title="Direct Messages" :subtitle="subtitle"/>
+        <AppBar title="Direct Messages" :subtitle="subtitle">
+            <template v-slot:trailing>
+                <ContactDropDownMenu
+                    v-if="contact"
+                    :contact="contact"
+                    :show-delete-message-history-button="true"
+                    @contact-deleted="onContactDeleted"/>
+            </template>
+        </AppBar>
 
         <!-- list -->
         <div class="flex h-full w-full overflow-hidden">
@@ -18,10 +26,11 @@ import AppBar from "../AppBar.vue";
 import MessageViewer from "../messages/MessageViewer.vue";
 import GlobalState from "../../js/GlobalState.js";
 import Utils from "../../js/Utils.js";
+import ContactDropDownMenu from "../contacts/ContactDropDownMenu.vue";
 
 export default {
     name: 'ContactMessagesPage',
-    components: {MessageViewer, AppBar, Page},
+    components: {ContactDropDownMenu, MessageViewer, AppBar, Page},
     props: {
         publicKey: String,
     },
@@ -35,6 +44,16 @@ export default {
             return;
         }
 
+    },
+    methods: {
+        onContactDeleted() {
+
+            // go back to main page
+            this.$router.push({
+                name: "main",
+            });
+
+        },
     },
     computed: {
         GlobalState() {
