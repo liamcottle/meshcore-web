@@ -5,7 +5,6 @@ class NotificationUtils {
         // request notification permission
         const result = await Notification.requestPermission();
         if(result !== "granted"){
-            console.log(result);
             return;
         }
 
