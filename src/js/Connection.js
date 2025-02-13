@@ -6,11 +6,23 @@ import Utils from "./Utils.js";
 class Connection {
 
     static async connectViaBluetooth() {
-        await this.connect(await BleConnection.open());
+        try {
+            await this.connect(await BleConnection.open());
+            return true;
+        } catch(e) {
+            console.log(e);
+            return false;
+        }
     }
 
     static async connectViaSerial() {
-        await this.connect(await SerialConnection.open());
+        try {
+            await this.connect(await SerialConnection.open());
+            return true;
+        } catch(e) {
+            console.log(e);
+            return false;
+        }
     }
 
     static async connect(connection) {
