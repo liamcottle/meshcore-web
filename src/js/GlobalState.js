@@ -3,7 +3,7 @@ import {reactive} from "vue";
 // global state
 const globalState = reactive({
     connection: null,
-    database: null,
+    isDatabaseReady: false,
     selfInfo: null,
     contacts: [],
     channels: [

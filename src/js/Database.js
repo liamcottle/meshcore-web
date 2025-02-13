@@ -4,22 +4,23 @@ import {getRxStorageDexie} from 'rxdb/plugins/storage-dexie';
 import GlobalState from "./GlobalState.js";
 import Utils from "./Utils.js";
 
+var database = null;
 async function initDatabase(publicKeyHex) {
 
     // close any exsiting database connection
-    if(GlobalState.database){
-        await GlobalState.database.close();
+    if(database){
+        await database.close();
     }
 
     // create a database with a unique name per identity
-    GlobalState.database = await createRxDatabase({
+    database = await createRxDatabase({
         name: `meshcore_companion_db_${publicKeyHex}`,
         storage: getRxStorageDexie(),
         allowSlowCount: true,
     });
 
     // add database schemas
-    await GlobalState.database.addCollections({
+    await database.addCollections({
         messages: {
             schema: {
                 version: 0,
@@ -118,13 +119,16 @@ async function initDatabase(publicKeyHex) {
         },
     });
 
+    // database is now ready
+    GlobalState.isDatabaseReady = true;
+
 }
 
 class Message {
 
     // insert a message into the database
     static async insert(data) {
-        return await GlobalState.database.messages.insert({
+        return await database.messages.insert({
             id: v4(),
             status: data.status,
             to: Utils.bytesToHex(data.to),
@@ -141,7 +145,7 @@ class Message {
     }
 
     static async getMessageById(id) {
-        return await GlobalState.database.messages.findOne({
+        return await database.messages.findOne({
             selector: {
                 id: {
                     $eq: id,
@@ -151,7 +155,7 @@ class Message {
     }
 
     static async deleteMessageById(id) {
-        return await GlobalState.database.messages.findOne({
+        return await database.messages.findOne({
             selector: {
                 id: {
                     $eq: id,
@@ -165,7 +169,7 @@ class Message {
 
         // find one latest message by ack code
         // this will prevent updating older messages that might have the same ack code
-        const message = GlobalState.database.messages.findOne({
+        const message = database.messages.findOne({
             selector: {
                 expected_ack_crc: {
                     $eq: ackCode,
@@ -212,12 +216,12 @@ class Message {
 
     // get all messages
     static getAllMessages() {
-        return GlobalState.database.messages.find();
+        return database.messages.find();
     }
 
     // get direct messages for the provided public key
     static getContactMessages(publicKey) {
-        return GlobalState.database.messages.find({
+        return database.messages.find({
             selector: {
                 $or: [
                     // messages from us to other contact
@@ -250,7 +254,7 @@ class Message {
 
     // get unread direct messages count for the provided public key
     static getContactMessagesUnreadCount(publicKey, messagesLastReadTimestamp) {
-        return GlobalState.database.messages.count({
+        return database.messages.count({
             selector: {
                 timestamp: {
                     $gt: messagesLastReadTimestamp,
@@ -276,7 +280,7 @@ class ContactMessagesReadState {
 
     // update the read state of messages for the provided public key
     static async touch(publicKey) {
-        return await GlobalState.database.contact_messages_read_state.upsert({
+        return await database.contact_messages_read_state.upsert({
             id: Utils.bytesToHex(publicKey),
             timestamp: Date.now(),
         });
@@ -284,7 +288,7 @@ class ContactMessagesReadState {
 
     // get the read state of messages for the provided public key
     static get(publicKey) {
-        return GlobalState.database.contact_messages_read_state.findOne({
+        return database.contact_messages_read_state.findOne({
             selector: {
                 id: {
                     $eq: Utils.bytesToHex(publicKey),
@@ -299,7 +303,7 @@ class ChannelMessage {
 
     // insert a channel message into the database
     static async insert(data) {
-        return await GlobalState.database.channel_messages.insert({
+        return await database.channel_messages.insert({
             id: v4(),
             channel_idx: data.channel_idx,
             from: data.from != null ? Utils.bytesToHex(data.from) : null,
@@ -313,7 +317,7 @@ class ChannelMessage {
 
     // get channel messages for the provided channel idx
     static getChannelMessages(channelIdx) {
-        return GlobalState.database.channel_messages.find({
+        return database.channel_messages.find({
             selector: {
                 channel_idx: {
                     $eq: channelIdx,

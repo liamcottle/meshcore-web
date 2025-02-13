@@ -8,7 +8,7 @@ import GlobalState from "./js/GlobalState.js";
 
 // helper function that force redirects to the main page if there is no database connection
 function handleRouteThatRequiresDatabase() {
-    if(!GlobalState.database){
+    if(!GlobalState.isDatabaseReady){
         return {
             name: 'main',
         };
