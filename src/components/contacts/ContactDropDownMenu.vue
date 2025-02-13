@@ -66,6 +66,11 @@ export default {
     methods: {
         async onResetPath(contact) {
 
+            // confirm user wants to reset path
+            if(!confirm("Are you sure you want to reset the path to this contact?")){
+                return;
+            }
+
             // reset path
             await Connection.resetContactPath(contact.publicKey);
             await Connection.loadContacts();
