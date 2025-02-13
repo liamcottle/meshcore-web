@@ -48,9 +48,17 @@ class Connection {
     }
 
     static async connect(connection) {
+
+        // do nothing if connection not provided
+        if(!connection){
+            return;
+        }
+
+        // update connection and listen for events
         GlobalState.connection = connection;
         GlobalState.connection.on("connected", () => this.onConnected());
         GlobalState.connection.on("disconnected", () => this.onDisconnected());
+
     }
 
     static async disconnect() {
