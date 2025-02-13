@@ -175,8 +175,13 @@ class Connection {
         // send message
         const message = await GlobalState.connection.sendTextMessage(publicKey, text);
 
+        // mark message as failed after estimated timeout
+        setTimeout(async () => {
+            await Database.Message.setMessageFailedByAckCode(message.expectedAckCrc, "timeout");
+        }, message.estTimeout);
+
         // save to database
-        return await Database.Message.insert({
+        await Database.Message.insert({
             status: "sending",
             to: publicKey,
             from: GlobalState.selfInfo.publicKey,

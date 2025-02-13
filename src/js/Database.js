@@ -112,7 +112,7 @@ class Message {
 
         // find one latest message by ack code
         // this will prevent updating older messages that might have the same ack code
-        const latestMessageByPacketId = database.messages.findOne({
+        const message = database.messages.findOne({
             selector: {
                 expected_ack_crc: {
                     $eq: ackCode,
@@ -126,8 +126,44 @@ class Message {
         });
 
         // patch the message state
-        return await latestMessageByPacketId.incrementalPatch({
+        return await message.incrementalPatch({
             status: "delivered",
+        });
+
+    }
+
+    // mark a message as failed by its ack code
+    static async setMessageFailedByAckCode(ackCode, reason) {
+
+        // find one latest message by ack code
+        // this will prevent updating older messages that might have the same ack code
+        const message = await database.messages.findOne({
+            selector: {
+                expected_ack_crc: {
+                    $eq: ackCode,
+                },
+            },
+            sort: [
+                {
+                    timestamp: "desc",
+                },
+            ],
+        }).exec();
+
+        // do nothing if message not found
+        if(!message){
+            return;
+        }
+
+        // do nothing if already delivered
+        if(message.status === "delivered"){
+            return;
+        }
+
+        // patch the message state
+        await message.patch({
+            status: "failed",
+            error: reason,
         });
 
     }

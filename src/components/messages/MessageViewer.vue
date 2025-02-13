@@ -33,7 +33,7 @@
 
                                 <!-- state label -->
                                 <div class="my-auto">
-                                    <span v-if="isMessageFailed(message)">Failed</span>
+                                    <span v-if="isMessageFailed(message)">Failed: {{ message.error }}</span>
                                     <span v-else-if="isMessageDelivered(message)">Delivered</span>
                                     <span v-else>Sending</span>
                                 </div>
