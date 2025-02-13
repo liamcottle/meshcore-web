@@ -1,4 +1,5 @@
 self.addEventListener('fetch',function() {
+    // todo implement asset caching to allow using pwa without internet
     // this is required to meet the requirements for an installable pwa
     // it allows the browser to ask the user if they want to install to their homescreen
 });
