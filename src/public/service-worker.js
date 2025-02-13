@@ -10,6 +10,29 @@ self.addEventListener('notificationclick', function(event) {
     event.notification.close();
 
     // open pwa
-    event.waitUntil(self.clients.openWindow("/"));
+    const url = "/";
+    event.waitUntil(findClientForUrl(url).then((client) => {
+
+        // if an existing client exists, focus it
+        if(client){
+            client.focus();
+            return;
+        }
+
+        // otherwise open a new window
+        return self.clients.openWindow(url);
+
+    }));
 
 });
+
+const findClientForUrl = function(url) {
+    return self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+    }).then(function (clientList) {
+        return clientList.find(function(client) {
+            return client.url.endsWith(url);
+        });
+    });
+};
