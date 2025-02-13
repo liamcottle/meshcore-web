@@ -42,7 +42,7 @@
                                         <span>Failed: {{ message.error }}</span>
                                         <span @click="retrySendingMessage(message)" class="text-blue-500 underline cursor-pointer">Retry?</span>
                                     </span>
-                                    <span v-else-if="isMessageDelivered(message)">Delivered</span>
+                                    <span v-else-if="isMessageDelivered(message)" @click="showDeliveredMessageInfo(message)" class="cursor-pointer">Delivered</span>
                                     <span v-else>Sending</span>
                                 </div>
 
@@ -269,6 +269,22 @@ export default {
         },
         formatMessageTimestamp(timestamp) {
             return TimeUtils.formatMessageTimestamp(timestamp);
+        },
+        showDeliveredMessageInfo: function(message) {
+
+            // basic info
+            const info = [
+                `Sent: ${TimeUtils.millisecondsToDateTimeString(message.timestamp)}`,
+            ];
+
+            // add round trip time if available
+            if(message.rtt){
+                info.push(`RTT: ${message.rtt}ms`);
+            }
+
+            // show info
+            alert(info.join("\n"));
+
         },
     },
     computed: {

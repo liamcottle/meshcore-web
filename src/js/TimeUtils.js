@@ -27,8 +27,13 @@ class TimeUtils {
         }
 
         // long format for all other messages
-        return date.format("DD/MM/YYYY hh:mm A");
+        return date.format("DD/MMM/YYYY hh:mm A");
 
+    }
+
+    static millisecondsToDateTimeString(unixMilliseconds) {
+        const date = moment.unix(unixMilliseconds / 1000);
+        return date.format("DD/MMM/YYYY hh:mm A");
     }
 
     static getTimeAgoShortHand(date) {

@@ -121,7 +121,7 @@ class Connection {
         GlobalState.connection.on(Constants.PushCodes.SendConfirmed, async (event) => {
             console.log("SendConfirmed", event);
             await databaseToBeReady;
-            await Database.Message.setMessageDeliveredByAckCode(event.ackCode);
+            await Database.Message.setMessageDeliveredByAckCode(event.ackCode, event.roundTrip);
         });
 
         // initial setup without needing database

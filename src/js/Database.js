@@ -1,8 +1,12 @@
 import {v4} from 'uuid';
-import {createRxDatabase} from 'rxdb/plugins/core';
+import {addRxPlugin, createRxDatabase} from 'rxdb/plugins/core';
 import {getRxStorageDexie} from 'rxdb/plugins/storage-dexie';
 import GlobalState from "./GlobalState.js";
 import Utils from "./Utils.js";
+
+// add rxdb migration plugin
+import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
+addRxPlugin(RxDBMigrationSchemaPlugin);
 
 var database = null;
 async function initDatabase(publicKeyHex) {
@@ -23,7 +27,7 @@ async function initDatabase(publicKeyHex) {
     await database.addCollections({
         messages: {
             schema: {
-                version: 0,
+                version: 1,
                 primaryKey: 'id',
                 type: 'object',
                 properties: {
@@ -61,9 +65,19 @@ async function initDatabase(publicKeyHex) {
                     send_type: {
                         type: 'integer',
                     },
+                    rtt: {
+                        type: 'integer',
+                    },
                     error: {
                         type: 'string',
                     },
+                },
+            },
+            migrationStrategies: {
+                // add rtt integer property in v1
+                1: (oldMessage) => {
+                    oldMessage.rtt = null;
+                    return oldMessage;
                 },
             }
         },
@@ -140,6 +154,7 @@ class Message {
             timestamp: Date.now(),
             expected_ack_crc: data.expected_ack_crc,
             send_type: data.send_type,
+            rtt: null,
             error: null,
         });
     }
@@ -165,7 +180,7 @@ class Message {
     }
 
     // mark a message as delivered by its ack code
-    static async setMessageDeliveredByAckCode(ackCode) {
+    static async setMessageDeliveredByAckCode(ackCode, roundTrip) {
 
         // find one latest message by ack code
         // this will prevent updating older messages that might have the same ack code
@@ -185,6 +200,7 @@ class Message {
         // patch the message state
         return await message.incrementalPatch({
             status: "delivered",
+            rtt: roundTrip,
         });
 
     }
