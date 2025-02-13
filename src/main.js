@@ -6,9 +6,9 @@ import "./style.css";
 import App from './components/App.vue';
 import GlobalState from "./js/GlobalState.js";
 
-// helper function that force redirects to the main page if there is no device connection
-function handleRouteThatRequiresDeviceConnection() {
-    if(!GlobalState.connection){
+// helper function that force redirects to the main page if there is no database connection
+function handleRouteThatRequiresDatabase() {
+    if(!GlobalState.database){
         return {
             name: 'main',
         };
@@ -31,18 +31,20 @@ const routes = [
         path: '/contacts/:publicKey/messages',
         props: true,
         component: () => import("./components/pages/ContactMessagesPage.vue"),
+        beforeEnter: handleRouteThatRequiresDatabase,
     },
     {
         name: "channel.messages",
         path: '/channels/:channelIdx/messages',
         props: true,
         component: () => import("./components/pages/ChannelMessagesPage.vue"),
+        beforeEnter: handleRouteThatRequiresDatabase,
     },
     {
         name: "settings.radio",
         path: '/settings/radio',
         component: () => import("./components/pages/RadioSettingsPage.vue"),
-        beforeEnter: handleRouteThatRequiresDeviceConnection,
+        beforeEnter: handleRouteThatRequiresDatabase,
     },
 ];
 
