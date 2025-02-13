@@ -9,7 +9,7 @@ async function initDatabase(publicKeyHex) {
 
     // close any exsiting database connection
     if(database){
-        await database.destroy();
+        await database.close();
     }
 
     // create a database with a unique name per identity
