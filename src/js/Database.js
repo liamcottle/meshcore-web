@@ -200,6 +200,7 @@ class Message {
         // patch the message state
         return await message.incrementalPatch({
             status: "delivered",
+            error: null, // clear error, as we may have received an ack after delivery time out
             rtt: roundTrip,
         });
 
