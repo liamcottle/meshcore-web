@@ -13,10 +13,32 @@
                         <!-- message content -->
                         <div class="flex">
                             <div class="border border-gray-300 rounded-xl shadow overflow-hidden" :class="[ isMessageFailed(message) ? 'bg-red-500 text-white' : isMessageOutbound(message) ? 'bg-[#3b82f6] text-white' : 'bg-[#efefef]' ]">
-                                <div class="w-full space-y-0.5 px-2.5 py-1">
+
+                                <!-- message sender name (for inbound channel messages) -->
+                                <div v-if="isMessageInbound(message) && type === 'channel'" class="px-2 pt-1 text-xs text-gray-700 font-semibold">
+                                    {{ getChannelMessageSenderName(message) }}
+                                </div>
+
+                                <div class="w-full space-y-0.5 px-2.5" :class="[ isMessageInbound(message) && type === 'channel' ? 'pb-1' : 'py-1']">
 
                                     <!-- content -->
-                                    <div v-if="message.text" style="white-space:pre-wrap;word-break:break-word;font-family:inherit;">{{ message.text }}</div>
+                                    <div v-if="message.text" style="word-break:break-word;font-family:inherit;">
+
+                                        <!-- message text to/from contact -->
+                                        <div v-if="type === 'contact'">{{ message.text }}</div>
+
+                                        <!-- message text to/from channel -->
+                                        <div v-else-if="type === 'channel'">
+
+                                            <!-- inbound channel messages include sender name, so need to parse it -->
+                                            <div v-if="isMessageInbound(message)">{{ getChannelMessageText(message) }}</div>
+
+                                            <!-- outbound channel messages only include the message content, so show as is -->
+                                            <div v-else>{{ message.text }}</div>
+
+                                        </div>
+
+                                    </div>
 
                                 </div>
                             </div>
@@ -299,6 +321,27 @@ export default {
             // show info
             alert(info.join("\n"));
 
+        },
+        parseChannelMessageText(message) {
+
+            // split message text by colon
+            const parts = message.text.split(":");
+
+            // left side is sender name, right side is message text
+            // e.g: "Liam Cottle: Hello Mesh!"
+            const name = parts.shift();
+            const text = parts.join(":");
+            return {
+                name: name,
+                text: text,
+            };
+
+        },
+        getChannelMessageSenderName(message) {
+            return this.parseChannelMessageText(message).name;
+        },
+        getChannelMessageText(message) {
+            return this.parseChannelMessageText(message).text;
         },
     },
     computed: {
