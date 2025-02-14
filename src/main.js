@@ -5,6 +5,7 @@ import "./style.css";
 
 import App from './components/App.vue';
 import GlobalState from "./js/GlobalState.js";
+import Connection from "./js/Connection.js";
 
 // helper function that force redirects to the main page if there is no database connection
 function handleRouteThatRequiresDatabase() {
@@ -75,6 +76,10 @@ navigator.serviceWorker.addEventListener("message", async (event) => {
 
     }
 });
+
+// access Connection class from window
+// this allows typing "Connection.log = true" in Chrome dev tools
+window.Connection = Connection;
 
 createApp(App)
     .use(router)

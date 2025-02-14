@@ -6,6 +6,9 @@ import NotificationUtils from "./NotificationUtils.js";
 
 class Connection {
 
+    // enable to log raw tx/rx bytes to console
+    static log = false;
+
     static async connectViaBluetooth() {
         try {
             await this.connect(await BleConnection.open());
@@ -89,6 +92,20 @@ class Connection {
 
         // clear previous connection state
         GlobalState.contacts = [];
+
+        // log raw tx bytes if enabled
+        GlobalState.connection.on("tx", async (data) => {
+            if(this.log){
+                console.log("tx", data);
+            }
+        });
+
+        // log raw rx bytes if enabled
+        GlobalState.connection.on("rx", async (data) => {
+            if(this.log){
+                console.log("rx", data);
+            }
+        });
 
         // listen for self info, and then init database
         GlobalState.connection.once(Constants.ResponseCodes.SelfInfo, async (selfInfo) => {
