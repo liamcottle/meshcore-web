@@ -131,6 +131,22 @@ async function initDatabase(publicKeyHex) {
                 },
             }
         },
+        channel_messages_read_state: {
+            schema: {
+                version: 0,
+                primaryKey: 'id',
+                type: 'object',
+                properties: {
+                    id: {
+                        type: 'string',
+                        maxLength: 36,
+                    },
+                    timestamp: {
+                        type: 'integer',
+                    },
+                },
+            }
+        },
     });
 
     // database is now ready
@@ -348,9 +364,46 @@ class ChannelMessage {
         });
     }
 
+    // get unread channel messages count for the provided channel idx
+    static getChannelMessagesUnreadCount(channelIdx, messagesLastReadTimestamp) {
+        return database.channel_messages.count({
+            selector: {
+                timestamp: {
+                    $gt: messagesLastReadTimestamp,
+                },
+                channel_idx: {
+                    $eq: channelIdx,
+                },
+            },
+        });
+    }
+
     // delete channel messages for the provided channel idx
     static async deleteChannelMessages(channelIdx) {
         await this.getChannelMessages(channelIdx).remove();
+    }
+
+}
+
+class ChannelMessagesReadState {
+
+    // update the read state of messages for the provided channel idx
+    static async touch(channelIdx) {
+        return await database.channel_messages_read_state.upsert({
+            id: channelIdx.toString(),
+            timestamp: Date.now(),
+        });
+    }
+
+    // get the read state of messages for the provided channel idx
+    static get(channelIdx) {
+        return database.channel_messages_read_state.findOne({
+            selector: {
+                id: {
+                    $eq: channelIdx.toString(),
+                },
+            },
+        });
     }
 
 }
@@ -360,4 +413,5 @@ export default {
     Message,
     ContactMessagesReadState,
     ChannelMessage,
+    ChannelMessagesReadState,
 };

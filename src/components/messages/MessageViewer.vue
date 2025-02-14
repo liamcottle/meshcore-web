@@ -283,9 +283,11 @@ export default {
         },
         updateMessagesLastReadAt() {
 
-            // update last read at for contact messages
+            // update last read state for messages
             if(this.type === "contact"){
                 Database.ContactMessagesReadState.touch(this.contact.publicKey);
+            } else if(this.type === "channel"){
+                Database.ChannelMessagesReadState.touch(this.channel.idx);
             }
 
         },
