@@ -191,6 +191,10 @@ class Connection {
         await GlobalState.connection.sendCommandRemoveContact(publicKey);
     }
 
+    static async shareContact(publicKey) {
+        await GlobalState.connection.shareContact(publicKey);
+    }
+
     static async sendMessage(publicKey, text) {
 
         // send message
