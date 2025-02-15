@@ -58,6 +58,9 @@ class Connection {
             return;
         }
 
+        // clear previous connection state
+        GlobalState.contacts = [];
+
         // update connection and listen for events
         GlobalState.connection = connection;
         GlobalState.connection.on("connected", () => this.onConnected());
@@ -89,9 +92,6 @@ class Connection {
         const databaseToBeReady = new Promise((resolve) => {
             onDatabaseReady = resolve;
         });
-
-        // clear previous connection state
-        GlobalState.contacts = [];
 
         // log raw tx bytes if enabled
         GlobalState.connection.on("tx", async (data) => {
