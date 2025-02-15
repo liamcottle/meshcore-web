@@ -57,8 +57,8 @@
                         <div class="bg-white p-2 font-semibold">Radio Settings</div>
 
                         <div class="w-full p-2">
-                            <div class="block mb-2 text-sm font-medium text-gray-900">Frequency (kHz)</div>
-                            <input v-model="radioFreq" type="number" placeholder="e.g: 917375" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <div class="block mb-2 text-sm font-medium text-gray-900">Frequency (MHz)</div>
+                            <input v-model="radioFreq" type="number" placeholder="e.g: 917.375" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
 
                         <div class="w-full p-2">
@@ -124,7 +124,11 @@ export default {
             await Connection.loadSelfInfo();
 
             this.name = GlobalState.selfInfo.name;
-            this.radioFreq = GlobalState.selfInfo.radioFreq;
+
+            // convert radio frequency from kHz to MHz
+            // e.g: 917375 -> 917.375
+            this.radioFreq = GlobalState.selfInfo.radioFreq / 1000;
+
             this.radioBw = GlobalState.selfInfo.radioBw;
             this.radioSf = GlobalState.selfInfo.radioSf;
             this.radioCr = GlobalState.selfInfo.radioCr;
@@ -189,6 +193,10 @@ export default {
                     this.longitude = 0;
                 }
 
+                // convert radio frequency from MHz to kHz
+                // e.g: 917.375 -> 917375
+                const radioFreq = this.radioFreq * 1000;
+
                 // convert latitude and longitude from decimal to integer
                 // e.g: -38.664646, 178.023507 -> -38664646, 178023507
                 const latitude = Math.floor(this.latitude * 1000000);
@@ -197,7 +205,7 @@ export default {
                 // save settings
                 await Connection.setAdvertName(this.name);
                 await Connection.setAdvertLatLong(latitude, longitude);
-                await Connection.setRadioParams(this.radioFreq, this.radioBw, this.radioSf, this.radioCr);
+                await Connection.setRadioParams(radioFreq, this.radioBw, this.radioSf, this.radioCr);
                 await Connection.setTxPower(this.txPower);
 
                 // reload self info
