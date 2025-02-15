@@ -42,9 +42,9 @@ const routes = [
         beforeEnter: handleRouteThatRequiresDatabase,
     },
     {
-        name: "settings.radio",
-        path: '/settings/radio',
-        component: () => import("./components/pages/RadioSettingsPage.vue"),
+        name: "settings",
+        path: '/settings',
+        component: () => import("./components/pages/SettingsPage.vue"),
         beforeEnter: handleRouteThatRequiresDatabase,
     },
 ];

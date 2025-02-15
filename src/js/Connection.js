@@ -170,6 +170,10 @@ class Connection {
         await GlobalState.connection.setAdvertName(name);
     }
 
+    static async setAdvertLatLong(latitude, longitude) {
+        await GlobalState.connection.setAdvertLatLong(latitude, longitude);
+    }
+
     static async setTxPower(txPower) {
         await GlobalState.connection.setTxPower(txPower);
     }
