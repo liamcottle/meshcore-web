@@ -245,10 +245,12 @@ export default {
             } catch(e) {
                 console.log(e);
                 alert("Failed to save settings!");
-            }
+            } finally {
 
-            // show loading
-            this.isSaving = false;
+                // show loading
+                this.isSaving = false;
+
+            }
 
         },
         bytesToHex(uint8Array) {
