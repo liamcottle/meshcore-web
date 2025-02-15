@@ -195,6 +195,10 @@ class Connection {
         await GlobalState.connection.shareContact(publicKey);
     }
 
+    static async exportContact(publicKey) {
+        return await GlobalState.connection.exportContact(publicKey);
+    }
+
     static async sendMessage(publicKey, text) {
 
         // send message
