@@ -5,7 +5,6 @@ A simple, mobile friendly, web based [MeshCore](https://github.com/ripplebiz/Mes
 ## TODO
 
 - add screenshots to readme
-- unread messages count for channels
 
 ## License
 
