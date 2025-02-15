@@ -62,18 +62,41 @@
                         </div>
 
                         <div class="w-full p-2">
-                            <div class="block mb-2 text-sm font-medium text-gray-900">Bandwidth (kHz)</div>
-                            <input v-model="radioBw" type="number" placeholder="e.g: 250000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <div class="block mb-2 text-sm font-medium text-gray-900">Bandwidth</div>
+                            <select v-model="radioBw" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option :value="7800">7.8 kHz</option>
+                                <option :value="10400">10.4 kHz</option>
+                                <option :value="15600">15.6 kHz</option>
+                                <option :value="20800">20.8 kHz</option>
+                                <option :value="31250">31.25 kHz</option>
+                                <option :value="41700">41.7 kHz</option>
+                                <option :value="62500">62.5 kHz</option>
+                                <option :value="125000">125 kHz</option>
+                                <option :value="250000">250 kHz</option>
+                                <option :value="500000">500 kHz</option>
+                            </select>
                         </div>
 
                         <div class="w-full p-2">
                             <div class="block mb-2 text-sm font-medium text-gray-900">Spreading Factor</div>
-                            <input v-model="radioSf" type="number" placeholder="e.g: 7" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <select v-model="radioSf" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option :value="7">7</option>
+                                <option :value="8">8</option>
+                                <option :value="9">9</option>
+                                <option :value="10">10</option>
+                                <option :value="11">11</option>
+                                <option :value="12">12</option>
+                            </select>
                         </div>
 
                         <div class="w-full p-2">
                             <div class="block mb-2 text-sm font-medium text-gray-900">Coding Rate</div>
-                            <input v-model="radioCr" type="number" placeholder="e.g: 5" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <select v-model="radioCr" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option :value="5">5</option>
+                                <option :value="6">6</option>
+                                <option :value="7">7</option>
+                                <option :value="8">8</option>
+                            </select>
                         </div>
 
                         <div class="w-full p-2">
