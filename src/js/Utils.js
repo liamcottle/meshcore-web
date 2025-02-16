@@ -43,6 +43,27 @@ class Utils {
 
     }
 
+    static getBatteryPercentage(millivolts) {
+
+        const minVoltage = 3400; // show battery as 0% at or below this value
+        const maxVoltage = 4200; // show battery as 100% at or above this value
+
+        // 0% if at or below min voltage
+        if(millivolts <= minVoltage){
+            return 0;
+        }
+
+        // 100% if at or above max voltage
+        if(millivolts >= maxVoltage){
+            return 100;
+        }
+
+        // linear calculation
+        // todo implement curve based voltage to percentage calculations
+        return Math.floor(((millivolts - minVoltage) / (maxVoltage - minVoltage)) * 100);
+
+    }
+
 }
 
 export default Utils;

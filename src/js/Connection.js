@@ -60,6 +60,7 @@ class Connection {
 
         // clear previous connection state
         GlobalState.contacts = [];
+        GlobalState.batteryPercentage = null;
 
         // update connection and listen for events
         GlobalState.connection = connection;
@@ -144,13 +145,19 @@ class Connection {
         // initial setup without needing database
         await this.loadSelfInfo();
         await this.syncDeviceTime();
+        await this.updateBatteryPercentage();
 
         // wait for database to be ready
         await databaseToBeReady;
 
-        // sync messages
+        // fetch data after database is ready
         await this.loadContacts();
         await this.syncMessages();
+
+        // auto update battery percentage once per minute
+        setInterval(async () => {
+            await this.updateBatteryPercentage();
+        }, 60000);
 
     }
 
@@ -164,6 +171,17 @@ class Connection {
 
     static async loadContacts() {
         GlobalState.contacts = await GlobalState.connection.getContacts();
+    }
+
+    static async updateBatteryPercentage() {
+        if(GlobalState.connection){
+            try {
+                const response = await GlobalState.connection.getBatteryVoltage();
+                GlobalState.batteryPercentage = Utils.getBatteryPercentage(response.batteryMilliVolts);
+            } catch(e) {
+                // ignore error
+            }
+        }
     }
 
     static async setAdvertName(name) {
@@ -268,6 +286,10 @@ class Connection {
 
     static async reboot() {
         await GlobalState.connection.reboot();
+    }
+
+    static async getBatteryVoltage() {
+        return await GlobalState.connection.getBatteryVoltage();
     }
 
     static async onContactMessageReceived(message) {
