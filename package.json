@@ -11,7 +11,7 @@
   "author": "Liam Cottle <liam@liamcottle.com>",
   "license": "MIT",
   "dependencies": {
-    "@liamcottle/meshcore.js": "^1.0.5",
+    "@liamcottle/meshcore.js": "^1.0.6",
     "@tailwindcss/forms": "^0.5.10",
     "@vitejs/plugin-vue": "^5.2.1",
     "autoprefixer": "^10.4.20",

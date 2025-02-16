@@ -266,6 +266,10 @@ class Connection {
         }
     }
 
+    static async reboot() {
+        await GlobalState.connection.reboot();
+    }
+
     static async onContactMessageReceived(message) {
 
         console.log("onContactMessageReceived", message);

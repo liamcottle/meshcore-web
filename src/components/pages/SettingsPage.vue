@@ -31,6 +31,7 @@
                 <!-- setting groups -->
                 <div class="space-y-4">
 
+                    <!-- public info -->
                     <div class="bg-white divide-y">
 
                         <div class="bg-white p-2 font-semibold">Public Info</div>
@@ -52,6 +53,7 @@
 
                     </div>
 
+                    <!-- radio settings -->
                     <div class="bg-white divide-y">
 
                         <div class="bg-white p-2 font-semibold">Radio Settings</div>
@@ -102,6 +104,34 @@
                         <div class="w-full p-2">
                             <div class="block mb-2 text-sm font-medium text-gray-900">Transmit Power (dBm)</div>
                             <input v-model="txPower" type="number" placeholder="e.g: 22" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        </div>
+
+                    </div>
+
+                    <!-- commands -->
+                    <div class="flex flex-col divide-y bg-white">
+
+                        <div class="bg-white p-2 font-semibold">Commands</div>
+
+                        <div @click="reboot" class="flex cursor-pointer px-2 py-3 bg-white hover:bg-gray-50">
+
+                            <!-- leading -->
+                            <div class="my-auto ml-2 mr-4 text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
+                                </svg>
+                            </div>
+
+                            <!-- title -->
+                            <div class="my-auto mr-auto">Reboot</div>
+
+                            <!-- trailing -->
+                            <div class="my-auto mr-2 text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+
                         </div>
 
                     </div>
@@ -237,11 +267,6 @@ export default {
                 // show success alert
                 alert("Settings saved.");
 
-                // go back to main page
-                this.$router.push({
-                    name: "main",
-                });
-
             } catch(e) {
                 console.log(e);
                 alert("Failed to save settings!");
@@ -251,6 +276,31 @@ export default {
                 this.isSaving = false;
 
             }
+
+        },
+        async reboot() {
+
+            // ask user to confirm action
+            if(!confirm("Are you sure you want to reboot this device?")){
+                return;
+            }
+
+            // tell radio to reboot
+            try {
+                await Connection.reboot();
+            } catch(e) {
+                alert("Failed to reboot device!");
+                console.log(e);
+                return;
+            }
+
+            // tell user device is rebooting
+            alert("Device is rebooting. You will need to reconnect!");
+
+            // go back to main page
+            this.$router.push({
+                name: "main",
+            });
 
         },
         bytesToHex(uint8Array) {
