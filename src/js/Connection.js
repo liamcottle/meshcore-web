@@ -77,6 +77,10 @@ class Connection {
         // update ui
         GlobalState.connection = null;
 
+        // clear previous connection timers
+        clearInterval(GlobalState.batteryPercentageInterval);
+        GlobalState.batteryPercentageInterval = null;
+
     }
 
     static async onConnected() {
@@ -155,7 +159,7 @@ class Connection {
         await this.updateBatteryPercentage();
 
         // auto update battery percentage once per minute
-        setInterval(async () => {
+        GlobalState.batteryPercentageInterval = setInterval(async () => {
             await this.updateBatteryPercentage();
         }, 60000);
 

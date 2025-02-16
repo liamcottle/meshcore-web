@@ -6,6 +6,7 @@ const globalState = reactive({
     isDatabaseReady: false,
     selfInfo: null,
     batteryPercentage: null,
+    batteryPercentageInterval: null,
     contacts: [],
     channels: [
         {
