@@ -61,6 +61,7 @@ class Connection {
         // clear previous connection state
         GlobalState.selfInfo = null;
         GlobalState.contacts = [];
+        GlobalState.channels = [];
         GlobalState.batteryPercentage = null;
 
         // update connection and listen for events
@@ -156,6 +157,7 @@ class Connection {
 
         // fetch data after database is ready
         await this.loadContacts();
+        await this.loadChannels();
         await this.syncMessages();
         await this.updateBatteryPercentage();
 
@@ -176,6 +178,17 @@ class Connection {
 
     static async loadContacts() {
         GlobalState.contacts = await GlobalState.connection.getContacts();
+    }
+
+    static async loadChannels() {
+        // todo fetch from device when implemented in firmware
+        GlobalState.channels = [
+            {
+                idx: 0,
+                name: "Public Channel",
+                description: "This is the default public channel.",
+            },
+        ];
     }
 
     static async updateBatteryPercentage() {

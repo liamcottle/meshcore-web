@@ -8,13 +8,7 @@ const globalState = reactive({
     batteryPercentage: null,
     batteryPercentageInterval: null,
     contacts: [],
-    channels: [
-        {
-            idx: 0,
-            name: "Public Channel",
-            description: "This is the default public channel.",
-        },
-    ],
+    channels: [],
 });
 
 export default globalState;
