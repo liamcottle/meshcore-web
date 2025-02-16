@@ -59,6 +59,7 @@ class Connection {
         }
 
         // clear previous connection state
+        GlobalState.selfInfo = null;
         GlobalState.contacts = [];
         GlobalState.batteryPercentage = null;
 
