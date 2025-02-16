@@ -145,7 +145,6 @@ class Connection {
         // initial setup without needing database
         await this.loadSelfInfo();
         await this.syncDeviceTime();
-        await this.updateBatteryPercentage();
 
         // wait for database to be ready
         await databaseToBeReady;
@@ -153,6 +152,7 @@ class Connection {
         // fetch data after database is ready
         await this.loadContacts();
         await this.syncMessages();
+        await this.updateBatteryPercentage();
 
         // auto update battery percentage once per minute
         setInterval(async () => {
@@ -286,10 +286,6 @@ class Connection {
 
     static async reboot() {
         await GlobalState.connection.reboot();
-    }
-
-    static async getBatteryVoltage() {
-        return await GlobalState.connection.getBatteryVoltage();
     }
 
     static async onContactMessageReceived(message) {
