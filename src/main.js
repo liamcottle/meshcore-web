@@ -62,20 +62,22 @@ for(const route of routes){
 }
 
 // listen for postMessage events from service worker
-navigator.serviceWorker.addEventListener("message", async (event) => {
-    if(event.data.type === "notificationclick"){
+if(navigator.serviceWorker){
+    navigator.serviceWorker.addEventListener("message", async (event) => {
+        if(event.data.type === "notificationclick"){
 
-        // get notification data
-        const notificationData = event.data.data;
+            // get notification data
+            const notificationData = event.data.data;
 
-        // if notification data includes vue-route-push, push the route to vue
-        const vueRoutePush = notificationData["vue-route-push"];
-        if(vueRoutePush){
-            await router.push(vueRoutePush);
+            // if notification data includes vue-route-push, push the route to vue
+            const vueRoutePush = notificationData["vue-route-push"];
+            if(vueRoutePush){
+                await router.push(vueRoutePush);
+            }
+
         }
-
-    }
-});
+    });
+}
 
 // access Connection class from window
 // this allows typing "Connection.log = true" in Chrome dev tools
