@@ -4,7 +4,7 @@
         <!-- search -->
         <div v-if="contacts.length > 0" class="flex bg-white border-b border-gray-300 divide-x">
             <div class="flex p-1 w-full">
-                <input v-model="contactsSearchTerm" type="text" :placeholder="`Search ${contacts.length} Contacts...`" class="h-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <input v-model="contactsSearchTerm" type="text" :placeholder="`Search ${contacts.length} ${contacts.length === 1 ? 'Contact' : 'Contacts'}...`" class="h-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             </div>
             <div class="flex text-gray-500">
                 <DropDownMenu class="mx-auto my-auto">
