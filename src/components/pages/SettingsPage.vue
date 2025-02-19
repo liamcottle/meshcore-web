@@ -26,6 +26,9 @@
                     <div v-if="GlobalState.selfInfo?.publicKey" class="text-sm text-gray-500">
                         &lt;{{ bytesToHex(GlobalState.selfInfo.publicKey.slice(0, 4)) }}...{{ bytesToHex(GlobalState.selfInfo.publicKey.slice(-4)) }}&gt;
                     </div>
+                    <div v-if="deviceInfo" class="text-sm text-gray-500">
+                        <span>Firmware Build Date: {{ deviceInfo.firmware_build_date }}</span>
+                    </div>
                 </div>
 
                 <!-- setting groups -->
@@ -166,6 +169,7 @@ export default {
             txPower: null,
             latitude: null,
             longitude: null,
+            deviceInfo: null,
         };
     },
     mounted() {
@@ -175,6 +179,7 @@ export default {
         async load() {
 
             await Connection.loadSelfInfo();
+            await this.loadDeviceInfo();
 
             this.name = GlobalState.selfInfo.name;
 
@@ -192,6 +197,13 @@ export default {
             this.latitude = GlobalState.selfInfo.advLat / 1000000;
             this.longitude = GlobalState.selfInfo.advLon / 1000000;
 
+        },
+        async loadDeviceInfo() {
+            try {
+                this.deviceInfo = await Connection.deviceQuery();
+            } catch(e) {
+                console.log(e);
+            }
         },
         async save() {
 

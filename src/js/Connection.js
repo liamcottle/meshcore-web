@@ -202,6 +202,10 @@ class Connection {
         }
     }
 
+    static async deviceQuery(appTargetVer = 1) {
+        return await GlobalState.connection.deviceQuery(appTargetVer);
+    }
+
     static async setAdvertName(name) {
         await GlobalState.connection.setAdvertName(name);
     }
