@@ -10,7 +10,7 @@
                 <!-- connected or configured -->
                 <span v-if="GlobalState.connection != null">
                     <span v-if="GlobalState.selfInfo">
-                        <span v-if="GlobalState.batteryPercentage">{{ GlobalState.batteryPercentage }}% - </span>
+                        <span v-if="GlobalState.batteryPercentage">Battery {{ GlobalState.batteryPercentage }}% - </span>
                         <span>{{ GlobalState.selfInfo.name }}</span>
                     </span>
                     <span v-else>Connecting...</span>
