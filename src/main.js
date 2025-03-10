@@ -42,6 +42,12 @@ const routes = [
         beforeEnter: handleRouteThatRequiresDatabase,
     },
     {
+        name: "rxlog",
+        path: '/rxlog',
+        component: () => import("./components/pages/RxLogPage.vue"),
+        beforeEnter: handleRouteThatRequiresDatabase,
+    },
+    {
         name: "settings",
         path: '/settings',
         component: () => import("./components/pages/SettingsPage.vue"),
