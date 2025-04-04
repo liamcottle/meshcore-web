@@ -206,8 +206,8 @@ export default {
             return this.logs.filter((log) => {
                 const search = this.search.toLowerCase();
                 const matchesPacketHash = log.packet_hash.toLowerCase().includes(search);
-                const matchesPayloadType = log.packet.getPayloadTypeString().toLowerCase().includes(search);
-                const matchesRouteType = log.packet.getRouteTypeString().toLowerCase().includes(search);
+                const matchesPayloadType = log.packet.getPayloadTypeString()?.toLowerCase()?.includes(search) === true;
+                const matchesRouteType = log.packet.getRouteTypeString()?.toLowerCase()?.includes(search) === true;
                 return matchesPacketHash || matchesPayloadType || matchesRouteType;
             });
         },
