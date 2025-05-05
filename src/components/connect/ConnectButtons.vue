@@ -15,6 +15,8 @@
             </div>
             <div class="font-semibold">Not Connected</div>
             <div>Connect a MeshCore device to continue</div>
+            <div class="text-red-500">This web client is no longer maintained.</div>
+            <div class="text-red-500">Please use the new app: <a target="_blank" href="https://app.meshcore.nz" class="text-blue-500 underline">https://app.meshcore.nz</a></div>
         </div>
 
         <!-- bluetooth -->
